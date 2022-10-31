@@ -43,7 +43,7 @@
    ;
    ; The `extract-goals-for-vars-fix` will expand the set of relevant variables
    ; to include `?a` and then, because of the `?a: ?b` edge, `?b`.
-   (where/error Term_subst (apply-substitution-from-env Env VarIds_in))
+   (where/error Term_subst (apply-substitution-from-env Env (apply-substitution-from-env Env VarIds_in)))
    (where/error (VarIds_free Relations) (extract-goals-for-vars-fix Env () () Term_subst))
 
    (where [VarId_new ...] ,(set-subtract (term VarIds_free) (term VarIds_in)))
@@ -64,7 +64,7 @@
 
   [(variable-substitution Env VarId)
    [(VarId Parameter)]
-   (where Parameter (apply-substitution-from-env Env VarId))]
+   (where Parameter (apply-substitution-from-env Env (apply-substitution-from-env Env VarId)))]
 
   )
 
