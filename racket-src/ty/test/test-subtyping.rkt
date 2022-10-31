@@ -116,6 +116,37 @@
             )
            )
 
+   (traced '()
+           ; Test that, given some placeholder type T
+           ;
+           ;     U <: &'a mut T
+           ;
+           ; is true if
+           ;
+           ;     U = &'b mut T
+           ;
+           ; and
+           ;
+           ;     'b -outlives- 'a
+           (test-match
+            formality-ty
+
+            [(:-
+              [(VarId_b lifetime ∃ (universe 1))]
+              ([(U (rigid-ty (ref mut) (VarId_b T)))] ; U = &'b mut T
+               [(VarId_b -outlives- a)]
+               ))]
+
+            (term (ty:query
+                   Env
+                   ((∀ ((type T)))
+                    (∃ ((type U) (lifetime a))))
+                   ()
+                   (U <= (user-ty (&mut a T)))
+                   ))
+            )
+           )
+
    (; Test for capture avoidance -- we should not be able to prove this!
     test-equal
     (term (ty:query
